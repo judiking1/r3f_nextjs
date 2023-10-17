@@ -112,11 +112,13 @@ const getRandomColor = () => {
     return color;
 };
 
-// 10개의 랜덤 색상을 가진 배열
-const someColorArray = Array.from({ length: 10 }, () => getRandomColor());
-
 export default function MyElement3D() {
     const [focusedTrain, setFocusedTrain] = useState<number | null>(null);
+    const [trainColors, setTrainColors] = useState<string[]>([]);
+    useEffect(() => {
+        const initialColors = Array.from({ length: 10 }, () => getRandomColor());
+        setTrainColors(initialColors);
+    }, []);
     return (
         <>
             <button onClick={() => window.dispatchEvent(new Event('zoomIn'))}>Zoom In</button>
@@ -124,9 +126,9 @@ export default function MyElement3D() {
             <button onClick={() => setFocusedTrain(null)}>Reset View</button>
             {Array.from({ length: 10 }, (_, i) => (
                 <button key={i} onClick={() => setFocusedTrain(i)} style={{
-                    backgroundColor: someColorArray[i],
+                    backgroundColor: trainColors[i],
                     color: '#fff'
-                }}> {/* 오류 해결 */}
+                }}>
                     Focus on Train {i}
                 </button>
             ))}
@@ -135,7 +137,7 @@ export default function MyElement3D() {
                 <OrbitControls />
                 <Rail />
                 {Array.from({ length: 10 }, (_, i) => (
-                    <Train id={i} color={someColorArray[i]} />
+                    <Train key={i} id={i} color={trainColors[i]} />
                 ))}
             </Canvas>
         </>
